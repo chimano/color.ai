@@ -2,15 +2,13 @@ import tensorflow as tf
 
 
 def fc_model_fn(features, labels, mode):
-    input_layer = tf.reshape(features['x'], [-1,1,1,3])
+    input_layer = tf.layers.Input(shape=(3,), batch_size=-1, dtype=tf.int32)
 
-    flatten = tf.reshape(input_layer, [-1, 3])
-
-    fc_1 = tf.layers.dense(inputs=flattened, units=3, activation=tf.nn.relu)
-    fc_2 = tf.layers.dense(inputs=flattened, units=8, activation=tf.nn.relu)
-    fc_3 = tf.layers.dense(inputs=flattened, units=18, activation=tf.nn.relu)
+    fc_1 = tf.layers.dense(inputs=input_layer, units=3, activation=tf.nn.relu)
+    fc_2 = tf.layers.dense(inputs=fc_1, units=8, activation=tf.nn.relu)
+    fc_3 = tf.layers.dense(inputs=fc_2, units=18, activation=tf.nn.relu)
     
-    dropout = tf.layers.dropout(inputs=fc_1, rate=0.4, training=mode == tf.estimator.ModeKeys.TRAIN)
+    dropout = tf.layers.dropout(inputs=fc_3, rate=0.4, training=mode == tf.estimator.ModeKeys.TRAIN)
     logits = tf.layers.dense(inputs=dropout, units=11)
     predictions = {
         'classes': tf.argmax(input=logits, axis=1),
