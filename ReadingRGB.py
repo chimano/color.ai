@@ -15,7 +15,7 @@ def AveragePixelRGB(pix_list):
     red = int(round(red, 0))
     green = int(round(green, 0))
     blue = int(round(blue, 0))
-    return [red, green, blue]
+    return red, green, blue
     
 im = Image.open("photo.png",'r') #Can be many different formats.
 pix = im.load()
